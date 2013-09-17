@@ -12,11 +12,11 @@ class Generator:
             if item.find(' ') < 0:
                 item += ' '
             name, info = item.split(' ', 2)
-            for i in range(len(name) - 1):
-                self.clusters.append((name[i:i+2], info))
+            for i in range(len(name) - 2):
+                self.clusters.append((name[i:i+3], info))
     
     def generate(self, length=5):
-        length -= 2  # Account for initial cluster and cluster length of 2
+        length -= 3  # Account for initial cluster and cluster length of 3
         valid = False
         while not valid:
             valid = True
@@ -25,7 +25,7 @@ class Generator:
                 random.shuffle(self.clusters)
                 valid = False
                 for c in self.clusters:
-                    if c[0][0] == clusters[-1][1]:
+                    if c[0][0] == clusters[-1][2]:
                         valid = True
                         clusters.append(c[0])
                         break
@@ -35,7 +35,7 @@ class Generator:
                     # Don't allow triple letters
                     valid = False
                     break
-        return clusters[0][0] + ''.join([c[1] for c in clusters])
+        return (clusters[0][0] + ''.join([c[1:] for c in clusters]))[:length+3]
     
     
 
