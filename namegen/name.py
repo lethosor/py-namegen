@@ -10,6 +10,13 @@ try:
 except NameError:
     unicode = str
 
+def xor(c1, c2):
+    if c1 and c2:
+        return False
+    if c1 or c2:
+        return True
+    return False
+
 __metaclass__ = type
 
 class Generator:    
@@ -50,3 +57,23 @@ class Generator:
                     clusters.append(n[i:i + clength])
             self.cluster_cache[clength] = clusters
         return self.cluster_cache[clength]
+    
+    def generate(self, length=8, clength=3):
+        clusters = self.clusters(clength)
+        result = '\x01' * (clength - 1)  # maybe just 1
+        while len(result) - clength + 1 < length:
+            random.shuffle(clusters)
+            ok = False
+            for c in clusters:
+                if result.endswith(c[:-1]):
+                    result += c[-1]
+                    ok = True
+                    break
+            if not ok:
+                raise Exception('Failed to generate name')
+        return result
+        #return result[clength-1:]
+        #return result[clength - 1:length + clength - 1]
+        #return result[1:-1]
+        
+    
